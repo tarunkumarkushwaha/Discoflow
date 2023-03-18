@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Raleway', sans-serif;
+}
+
+body {
+  background-color: #c2fab1;
+}
+
+.logo {
+  border-radius: 25px;
+  height: 100px;
+  margin: 0px 100px 0px 100px;
+}
+
+.aligncenter {
+  text-align: center
+}
+
+.flex-column-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar{
+  margin: 10px;
+  padding: 10px;
+}
+
+#search:hover {
+  background-color: rgb(111, 236, 99);
+  color: rgb(7, 7, 7);
+  transition-property: all;
+  transition-duration: 0.2s;
+}
+
+#search:active {
+  background-color: rgb(155, 238, 146);
+  color: rgb(180, 179, 179);
+  transition-property: all;
+  transition-duration: 0.05s;
+}
+
+#search {
+  border: 2px solid black;
+  margin-left: 400px;
+  border-radius: 15px;
+  padding: 10px;
+  margin: 0px 100px 0px 100px;
+  width: 200px;
+  height: 30px;
+}
+
+.flex-row-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+#playlist{
+  height: 75vh;
+}
+
+.songbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 175px;
+  padding: 5px;
+  margin: 25px;
+  width: 150px;
+  box-shadow: 0px 15px 40px #0a0a0a66;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: 2px solid #f3cdcd;
+  border-radius: 15px;
+}
+
+.songbox:hover {
+  cursor: pointer;
+  transition-property: all;
+  transition-duration: 0.5s;
+  background-color: #b82c2e;
+  border: 2px solid #e21a1a;
+}
+
+.songbox:active {
+  border: 2px solid #2b0101;
+  transition-property: all;
+  transition-duration: 0.1s;
+}
+
+.songnames {
+  position: relative;
+  top: 25%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  background-color: #cec1bf;
+  margin: 10px;
+  border-radius: 15px;
+  width: 100px;
+  height: 50px;
+}
+
+.backbtn {
+  background-color: #db5656;
+  cursor: pointer;
+  position: absolute;
+  top: 14%;
+  right: 2%;
+  color: #faf5f5;
+  height: 40px;
+  width: 80px;
+  border-radius: 15px;
+}
+
+@media only screen and (max-width: 300px) {}
+
+.footer {
+  text-align: center;
+  position: relative;
+  top: 97%;
+}
