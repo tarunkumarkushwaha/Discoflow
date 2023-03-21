@@ -3,8 +3,11 @@ import { useState, useEffect, useRef } from 'react'
 
 const Audioplayer = ({ que }) => {
     const [playbtn, setplaybtn] = useState("▶")
-    // const [playset, setplayset] = useState(playAudio)
+    // const [playset, setplayset] = useState("")
     const [flag, setflag] = useState(false)
+
+    // console.log(que)
+
 
     let soundtracks = [
         {
@@ -38,8 +41,8 @@ const Audioplayer = ({ que }) => {
             bgimage: "https://cdn.pixabay.com/photo/2016/02/13/10/35/tulips-1197602__340.jpg"
         }
     ]
-    let myAudio = new Audio(soundtracks[0].tracklink)
-    // const myAudio = useRef(soundtracks[0].tracklink)
+    // let songquery = soundtracks.filter(item => item.songname.toLowerCase().includes(que.toLowerCase()))[0].tracklink
+    let myAudio = new Audio(que)
 
     // audioplayer 
     let progress
@@ -56,7 +59,7 @@ const Audioplayer = ({ que }) => {
     //     new Audio(myAudio).pause()
     //     setflag(false)
     //     // setplaybtn("▶")
-        
+
     // }  
 
     const next = () => {
@@ -70,17 +73,20 @@ const Audioplayer = ({ que }) => {
     }
 
     const playPause = () => {
-        if(myAudio.paused){myAudio.play()
-        // setflag(true)
-    }
-        else{myAudio.pause()
-        // setflag(false) 
-    }
+        if (myAudio.paused) {
+            myAudio.play()
+            // console.log(songquery)
+            // setflag(true)
+        }
+        else {
+            myAudio.pause()
+            // setflag(false) 
+        }
     }
 
     // useEffect(() => {
-    //     console.log(flag)
-    // }, [playPause])
+    //     setplayset(soundtracks.filter(item => item.songname.toLowerCase().includes(que.toLowerCase()))[0].tracklink)
+    // }, [])
 
     // search.addEventListener("keypress", function (event) {
     //     if (event.key === "Enter") {
@@ -92,9 +98,9 @@ const Audioplayer = ({ que }) => {
         <>
             {/* <audio id="myAudio">
             <source src={que.tracklink} type="audio/mp3" />
-            Your browser does not support the audio element.
+            Your browser does not support the audio element.ref={audioElem}
         </audio> */}
-        <audio src={soundtracks[0].tracklink} ref={audioElem}/>
+        <audio src={soundtracks[0].tracklink}/>
             <div className="playercontrols">
                 <div className="controlbtns">
                     {/* <label id="currentsongname" htmlFor='range'>{que.songname}</label> */}

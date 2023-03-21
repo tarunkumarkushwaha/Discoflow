@@ -40,9 +40,11 @@ function App() {
     }
   ]
 
+  // soundtracks.filter(item => item.songname.toLowerCase().includes(e.target.innerText.toLowerCase()))
+
   const clickhandler = (e) => {
     if (e.target.innerText.length < 50) {
-      setque(soundtracks.filter(item => item.songname.toLowerCase().includes(e.target.innerText.toLowerCase()))[0])
+      setque(soundtracks.filter(item => item.songname.toLowerCase().includes(e.target.innerText.toLowerCase()))[0].tracklink)
       setclicked(true)
     }
 
