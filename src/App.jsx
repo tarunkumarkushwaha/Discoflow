@@ -1,50 +1,62 @@
-import { useState, useEffect, useRef } from 'react'
-import Audioplayer from './Components/Audioplayer'
+import { useState, useRef } from 'react'
 import Navbar from './Components/Navbar'
 import Tracklist from './Components/Tracklist'
+import soundtracks from './assets/soundtracks'
 
 function App() {
   const [clicked, setclicked] = useState(false)
-  const [que, setque] = useState("")
+  const [context, setcontext] = useState(true)
+  const [progress, setprogress] = useState(false)
+  const [playbtn, setplaybtn] = useState("▶")
+  const [que, setque] = useState(soundtracks[0])
 
-  let soundtracks = [
-    {
-      songname: "Stranger things",
-      tracklink: "https://cdn.pixabay.com/download/audio/2022/10/25/audio_ecba0c58a1.mp3?filename=stranger-things-124008.mp3",
-      bgimage: "https://pixabay.com/images/download/way-7522066_640.jpg?attachment"
-    },
-    {
-      songname: "In Search of",
-      tracklink: "https://cdn.pixabay.com/download/audio/2022/11/22/audio_febc508520.mp3?filename=lifelike-126735.mp3",
-      bgimage: "https://pixabay.com/images/download/maze-2264_640.jpg?attachment"
-    },
-    {
-      songname: "Cinematic",
-      tracklink: "https://cdn.pixabay.com/download/audio/2022/03/07/audio_79bd0ad83e.mp3?filename=cinematic-atmosphere-score-2-22136.mp3",
-      bgimage: "https://pixabay.com/images/download/family-7108650_640.jpg?attachment"
-    },
-    {
-      songname: "Mystery unfold",
-      tracklink: "https://cdn.pixabay.com/download/audio/2022/10/07/audio_94333066a7.mp3?filename=let-the-mystery-unfold-122118.mp3",
-      bgimage: "https://pixabay.com/get/g6f3526180afc2ab635e328f391204605135df285dabee038110a9047b8dfbbc03f27c3a02e3f050ac2d6f33b524bb2d5d0af15cb68975d996262a3d14b45a063987b520776d7df0e94d16131abc1d811_640.jpg"
-    },
-    {
-      songname: "Inspiring",
-      tracklink: "https://cdn.pixabay.com/download/audio/2022/08/02/audio_884fe92c21.mp3?filename=inspiring-cinematic-ambient-116199.mp3",
-      bgimage: "https://pixabay.com/get/ge643126bdc44f4b562d524a84ed1fa5004c99a3e18596c3087b298d5b6a3cbf43c9d89a40d4e886ce1d74f83b12f88ab04f07269769e3632fd5aef6ea90f9edbe74edb5bfd84a3eb41d777ab9eb0c233_640.jpg"
-    },
-    {
-      songname: "Awaken by OYstudio",
-      tracklink: "https://cdn.pixabay.com/download/audio/2023/01/27/audio_e649bbdf58.mp3?filename=awaken-136824.mp3",
-      bgimage: "https://cdn.pixabay.com/photo/2016/02/13/10/35/tulips-1197602__340.jpg"
+  const currentsong = useRef()
+
+  const next = () => {
+    if (soundtracks.indexOf(soundtracks.filter(item => item.songname.toLowerCase().includes(que.songname.toLowerCase()))[0]) != soundtracks.length - 1) {
+      setque(soundtracks[soundtracks.indexOf(soundtracks.filter(item => item.songname.toLowerCase().includes(que.songname.toLowerCase()))[0]) + 1])
     }
-  ]
+    else { currentsong.current.pause() }
+  }
 
-  // soundtracks.filter(item => item.songname.toLowerCase().includes(e.target.innerText.toLowerCase()))
+
+  const previous = () => {
+    if (soundtracks.indexOf(soundtracks.filter(item => item.songname.toLowerCase().includes(que.songname.toLowerCase()))[0]) != 0) {
+      setque(soundtracks[soundtracks.indexOf(soundtracks.filter(item => item.songname.toLowerCase().includes(que.songname.toLowerCase()))[0]) - 1])
+
+    }
+    else { currentsong.current.pause() }
+  }
+
+  const playPause = () => {
+    if (context) {
+      init()
+      render()
+      if (currentsong.current.paused) {
+        setplaybtn("||")
+        currentsong.current.play()
+      }
+      else {
+        setplaybtn("▶")
+        currentsong.current.pause()
+      }
+    }
+    else {
+      if (currentsong.current.paused) {
+        setplaybtn("||")
+        currentsong.current.play()
+      }
+      else {
+        setplaybtn("▶")
+        currentsong.current.pause()
+      }
+    }
+    setcontext(false)
+  }
 
   const clickhandler = (e) => {
     if (e.target.innerText.length < 50) {
-      setque(soundtracks.filter(item => item.songname.toLowerCase().includes(e.target.innerText.toLowerCase()))[0].tracklink)
+      setque(soundtracks.filter(item => item.songname.toLowerCase().includes(e.target.innerText.toLowerCase()))[0])
       setclicked(true)
     }
 
@@ -53,19 +65,104 @@ function App() {
     }
   }
 
-  const backbutton = () => { setclicked(false) }
+  // Controls
+  const colBg = "#65c946";
+  const colBar0 = '#38e9e0';
+  const colBar1 = '#07012b';
+  const colBar2 = '#c2319e';
+
+  const fftSz = 1024;
+  const barWidth = 2;
+  const barLength = 0.25;
+  const bassFactor = 1.2;
+
+  let canvasCtx, audioCtx, audio, stream, analyser, buf, bufLength;
+
+  function render() {
+    requestAnimationFrame(render);
+    visCircle();
+  }
+
+  function init() {
+    audioCtx = new AudioContext();
+    canvasCtx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Create stream and analyser
+    stream = audioCtx.createMediaElementSource(currentsong.current);
+    analyser = audioCtx.createAnalyser(); // Analyser
+    analyser.fftSize = fftSz;
+    bufLength = analyser.frequencyBinCount;
+    buf = new Uint8Array(bufLength); // Buffer
+
+    // Connections
+    stream.connect(analyser);
+    analyser.connect(audioCtx.destination);
+    // console.log(`buff is ${buf}, bufflength is ${bufLength}, stream ${stream}`)
+  }
+
+  // Visualisation technique
+
+  function visCircle() {
+    analyser.getByteFrequencyData(buf);
+    let threshold = 0;
+    let width = 100;
+    let dtRot = (360 / bufLength * 2) * Math.PI / 180;
+    let bass = Math.floor(buf[1]);
+    let radius = -(width * barLength + bass * bassFactor);
+
+    canvasCtx.fillStyle = colBg;
+    canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+    canvasCtx.save();
+    canvasCtx.scale(0.5, 0.5);
+    canvasCtx.translate(window.innerWidth, window.innerHeight);
+
+    function draw(rad, wdt, mlt, rot) {
+      for (let i = 0; i < bufLength; ++i) {
+        let smp = buf[i];
+        if (smp >= threshold) {
+          canvasCtx.fillRect(0, rad, wdt, -smp * mlt);
+          canvasCtx.rotate(rot);
+        }
+      }
+    }
+    canvasCtx.fillStyle = colBar0;
+    draw(radius, barWidth, 1.00, dtRot);
+    draw(radius, barWidth, 1.00, -dtRot);
+    canvasCtx.fillStyle = colBar1;
+    draw(radius, barWidth, 0.50, dtRot);
+    draw(radius, barWidth, 0.50, -dtRot);
+    canvasCtx.fillStyle = colBar2;
+    draw(radius, barWidth, 0.05, dtRot);
+    draw(radius, barWidth, 0.05, -dtRot);
+    canvasCtx.restore();
+  }
+
 
   return (
     <>
       <div className="flex-column-center">
         <Navbar />
-        <div className="flex-row-center">
-          {clicked ? <button className='backbtn' onClick={backbutton}>Back</button> : null}
-        </div>
         <div id="playlist" onClick={clickhandler}>
-          {clicked ? <Audioplayer que={que} /> : <Tracklist soundtracks={soundtracks} />}
+          <Tracklist soundtracks={soundtracks} />
+          <audio src={que.tracklink} ref={currentsong} crossOrigin={'anonymous'}></audio>
         </div>
-        <div className="footer">&copy;Discoflow</div>
+        <div className="canvas"><canvas id='canvas'></canvas></div>
+        <div className="playercontrols">
+          <div className="controlbtns">
+            <p>{que.songname}</p>
+            <div className="flex-row-center">
+              <img id="currentsongimage" src={que.bgimage} alt="no image" />
+              <button onClick={previous} className="playerbtn" type="button">Prev</button>
+              <button onClick={playPause} className="playerbtn" type="button">{playbtn}</button>
+              <button onClick={next} className="playerbtn" type="button">Next</button>
+            </div>
+          </div>
+          <div className="slider">
+            <input type="range" name="range" id="range" value="0" />
+          </div>
+        </div>
       </div>
     </>
   )

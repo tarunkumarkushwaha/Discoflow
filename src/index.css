@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: #c2fab1;
+  background-color: #65c946;
 }
 
 .logo {
@@ -27,7 +27,7 @@ body {
   align-items: center;
 }
 
-.navbar{
+.navbar {
   margin: 10px;
   padding: 10px;
 }
@@ -63,7 +63,7 @@ body {
   justify-content: center;
 }
 
-#playlist{
+#playlist {
   height: 75vh;
 }
 
@@ -122,10 +122,140 @@ body {
   border-radius: 15px;
 }
 
-@media only screen and (max-width: 300px) {}
+#currentsongimage {
+  height: 60px;
+  width: 61px;
+  border-radius: 15px;
+  margin: 5px;
+}
 
-.footer {
-  text-align: center;
+.controlbtns {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100px;
+  padding: 10px;
+  margin: 5px;
+  background: #fa9797;
+  border-radius: 20px;
+}
+
+#range {
+  width: 70vw;
+  margin: 20px;
+}
+
+.slider {
+  height: 60px;
+  padding: 30px;
+  background: #fa9797;
+  border-radius: 20px;
+  box-shadow: 0px 15px 40px #0a0a0a66;
+}
+
+.playercontrols {
+  display: flex;
+  align-items: center;
+  background-color: #7be452;
+  justify-content: center;
+  position: fixed;
+  width: 100%;
+  top: 80%;
+  height: 130px;
+}
+
+.playerbtn {
+  background-color: #db5656;
+  height: 40px;
+  width: 40px;
+  border-radius: 25px;
+}
+
+.playerbtn:hover {
+  background: rgba(230, 41, 41, 0.678);
+  color: wheat;
+}
+
+.slider input[type="range"] {
+  -webkit-appearance: none;
+  width: 420px;
+  height: 2px;
+  background: black;
+  border: none;
+  outline: none;
+}
+
+.slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 30px;
+  height: 30px;
+  background: black;
+  border: 2px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider input[type="range"]::-webkit-slider-thumb:hover {
+  background: black;
+}
+.canvas{
   position: relative;
-  top: 97%;
+  /* top: 10%;
+  left: 20%; */
+}
+@media only screen and (max-width: 300px) {
+  #trackslist {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 100px;
+    margin-left: 30px;
+  }
+
+  .slider {
+    padding: 45px 5px 10px 5px;
+  }
+
+  #search {
+    margin-top: 10px;
+    margin-left: 0px;
+    width: auto;
+  }
+
+  #startpage {
+    margin: 20px;
+  }
+
+  .songbox {
+    width: auto;
+    margin: 20px;
+  }
+
+  .playercontrols {
+    height: auto;
+    bottom: 0vh;
+  }
+
+  #range {
+    width: auto;
+  }
+
+  .playerbtn {
+    background-color: #db5656;
+    height: 30px;
+    width: 40px;
+    border-radius: 15px;
+  }
+
+  #currentsongimage {
+    height: 30px;
+    width: 30px;
+    margin: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  }
+
+  #currentsongname {
+    margin: 10px;
+    margin-bottom: 20px;
+  }
 }
